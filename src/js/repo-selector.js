@@ -5,6 +5,7 @@ export var api = {
 import {api as ghAPI} from './lib/gh-api.js';
 import {api as dom} from './lib/dom.js';
 import {api as issues} from './Issues.js';
+import {api as tmpl} from './templates.js';
 
 var
 	el = {}
@@ -43,12 +44,8 @@ function onSearchSubmit(e) {
 	
 	ghAPI.search.repository(keywords, qualifiers)
 		.then(function(repos) {
-			var itemsHTML = repos.items.map(m => `<li class="item">${m.full_name}</li>`).join('');
-			
-			if (itemsHTML === '')
-				itemsHTML = 'No items found';
-			
-			el.searchResults.innerHTML = itemsHTML;
+			var html = repos.total_count === 0 ? 'No items found' : tmpl.renderArray(repos.items, tmpl.templates['searchResult']);
+			el.searchResults.innerHTML = html;
 			showSearchResults();
 		})
 		.catch(function(err) {

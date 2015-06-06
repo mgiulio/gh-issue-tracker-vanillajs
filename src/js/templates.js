@@ -1,4 +1,9 @@
 var templates = {
+	'searchResult': m => `
+		<li class="item">
+			${m.full_name}
+		</li>
+	`,
 	'issue': m => `
 		<li class="item">
 			<h2 class="title">
