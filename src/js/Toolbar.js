@@ -7,32 +7,27 @@ import {api as dom} from './lib/dom.js';
 import {api as issues} from './Issues.js';
 
 var
-	rootEl,
-	searchResultsEl
+	el = {}
 ;
 
-function init(cfg) {
-	rootEl = document.querySelector(cfg.rootElSelector);
-	searchResultsEl = rootEl.querySelector('.search-results');
+init();
+
+function init() {
+	el.root = document.querySelector('#repo-selector');
+	el.repo = el.root.querySelector('.repo');
+	el.searchResults = el.root.querySelector('.search-results');
 	
-	rootEl.addEventListener('submit', changeCurrentRepo, false); 
-	searchResultsEl.addEventListener('click', onSearchResultSelection);
+	el.root.addEventListener('submit', onSearchSubmit, false); 
+	el.searchResults.addEventListener('click', onSearchResultSelection);
 }
 
-function changeCurrentRepo(e) {
-	// start activity indicator
-	
+function onSearchSubmit(e) {
+	e.stopPropagation();
 	e.preventDefault();
-	// stopprop?
-	
-	var
-		formEl = e.currentTarget,
-		repoEl = formEl.querySelector('.repo')
-	;
 
-	var userText = repoEl.value;
+	var userText = el.repo.value;
 	userText = sanitizeRepoSearchTerm(userText);
-	repoEl.value = userText;
+	el.repo.value = userText;
 	if (userText.length === 0)
 		return;
 
@@ -53,13 +48,37 @@ function changeCurrentRepo(e) {
 			if (itemsHTML === '')
 				itemsHTML = 'No items found';
 			
-			searchResultsEl.innerHTML = itemsHTML;
+			el.searchResults.innerHTML = itemsHTML;
 			showSearchResults();
 		})
 		.catch(function(err) {
 			console.log(err);
 		});
 	;
+}
+
+function onSearchResultSelection(e) {
+	e.stopPropagation();
+	e.preventDefault();
+	
+	var itemEl = dom.getTarget(e, '.item');
+	if (!itemEl)
+		return;
+	
+	var repoFullName = itemEl.innerHTML;
+	
+	issues.setRepo(repoFullName);
+	
+	hideSearchResults();
+	el.repo.value = '';
+}
+
+function showSearchResults() {
+	el.searchResults.classList.add('visible');
+}
+
+function hideSearchResults() {
+	el.searchResults.classList.remove('visible');
 }
 
 function sanitizeRepoSearchTerm(s) {
@@ -82,28 +101,4 @@ function parseRepoSearchTerm(s) {
 		user = parts[0];
 	
 	return [user, repo];
-}
-
-function onSearchResultSelection(e) {
-	e.stopPropagation();
-	e.preventDefault();
-	
-	var itemEl = dom.getTarget(e, '.item');
-	if (!itemEl)
-		return;
-	
-	var repoFullName = itemEl.innerHTML;
-	
-	issues.setRepo(repoFullName);
-	
-	hideSearchResults();
-}
-
-
-function showSearchResults() {
-	searchResultsEl.classList.add('visible');
-}
-
-function hideSearchResults() {
-	searchResultsEl.classList.remove('visible');
 }
