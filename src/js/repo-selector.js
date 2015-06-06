@@ -62,7 +62,7 @@ function onSearchResultSelection(e) {
 	if (!itemEl)
 		return;
 	
-	var repoFullName = itemEl.innerHTML;
+	var repoFullName = itemEl.dataset.fullname;
 	
 	issues.setRepo(repoFullName);
 	
