@@ -5,11 +5,13 @@ export var api = {
 import {api as ghAPI} from '../lib/gh-api.js';
 
 var
-	rootEl
+	rootEl,
+	searchResultsEl
 ;
 
 function init(cfg) {
 	rootEl = document.querySelector(cfg.rootElSelector);
+	searchResultsEl = rootEl.querySelector('.search-results');
 	
 	rootEl.addEventListener('submit', changeCurrentRepo, false); 
 }
@@ -43,16 +45,17 @@ function changeCurrentRepo(e) {
 	
 	ghAPI.search.repository(keywords, qualifiers)
 		.then(function(repos) {
-			console.log(repos);
-			// build markup from repos collection
-			// render the markup
-			// show the panel
-			// stop activity indicator
+			var itemsHTML = repos.items.map(m => `<li class="item">${m.full_name}</li>`).join('');
+			
+			if (itemsHTML === '')
+				itemsHTML = 'No items found';
+			
+			searchResultsEl.innerHTML = itemsHTML;
+			searchResultsEl.classList.add('visible');
 		})
 		.catch(function(err) {
 			console.log(err);
 		});
-		// done() with stop activity indicator?
 	;
 }
 

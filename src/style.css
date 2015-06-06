@@ -15,11 +15,40 @@ body {
 	color: #f6f6f6;
 	box-shadow: 0px 2px 2px 2px rgba(0,0,0, 0.5);
 }
+#toolbar #repo-selector {
+	position: relative;
+	width: 300px;
+	margin: 0 auto;
+}
 #toolbar #repo-selector input[type="text"] {
-	width: 10em;
+	width: 75%;
+	text-align: center;
 }
 #toolbar #repo-selector input[type="submit"] {
-	width: 3em;
+	width: 20%;
+}
+#toolbar .search-results {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	
+	position: absolute;
+	top: 100%;
+	width: 100%;
+	max-height: 90vh;
+	overflow: auto;
+	
+	background-color: #f6f6f6;
+	border: 1px solid #eee;
+	color: black;
+	
+	display: none;
+}
+#toolbar .search-results.visible {
+	display: block;
+}
+#toolbar .search-results .item {
+	margin: 0;
 }
 
 #list .items {

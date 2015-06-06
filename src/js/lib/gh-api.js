@@ -45,7 +45,6 @@ function makeRequest(path, pars) {
 		
 		return fetch(url)
 			.then(function(response) {
-				console.log(response.status);
 				if (response.status != 200)
 					reject(Error('Status error code: ' + response.status ));
 				
