@@ -1,9 +1,17 @@
 var templates = {
 	'searchResult': m => `
 		<li id="${m.id}" class="item${classIf(m.fork, ' fork')}" data-fullname="${m.full_name}">
-			<h2 class="title">${m.full_name} <a href="${m.html_url}">on gh</a></h2>
+			<h2 class="title">
+				<span class="owner">
+					<a href="${m.owner.url}" target="_blank">
+						<img src="${m.owner.avatar_url}" title="${m.owner.login}">
+						${m.owner.login}
+					</a>
+				</span>
+				/ 
+				<a href="${m.html_url}" target="_blank">${m.name}</a>
+			</h2>
 			<p class="description">${m.description}</p>
-			<a href="${m.owner.url}"><img src="${m.owner.avatar_url}" title="${m.owner.login}"></a>
 		</li>
 	`,
 	'issue': m => `

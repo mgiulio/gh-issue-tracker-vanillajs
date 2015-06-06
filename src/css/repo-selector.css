@@ -1,12 +1,17 @@
 #repo-selector {
 	position: relative;
-	width: 300px;
+	width: 400px;
 	margin: 0 auto;
 }
 
 #repo-selector input[type="text"] {
 	width: 75%;
+	padding: 10px 5px;
+	
 	text-align: center;
+	
+	font-family: sans-serif;
+	font-size: 14px;
 }
 #repo-selector input[type="submit"] {
 	width: 20%;
@@ -28,21 +33,46 @@
 	color: black;
 	
 	display: none;
+	
+	text-align: left;
 }
 #repo-selector .search-results.visible {
 	display: block;
 }
+
 #repo-selector .search-results .item {
-	margin: 5px;
-	padding: 10px;
+	margin: 0px;
+	padding: 5px;
+	
+	border-radius: 0;
 	
 	background: #aaa;
 	border-bottom: 1px solid #888;
 	color: #555;
 	
-	cursor: pointer;
+	font-family: sans-serif;
+	font-size: 12px;
 }
-#repo-selector .search-results .item:hover {
+/* #repo-selector .search-results .item:hover {
 	background: #555;
 	color: #aaa;
+} */
+
+#repo-selector .search-results .item .title {
+	margin: 0;
+	
+	font-family: serif;
+	font-size: 1.3em;
+}
+#repo-selector .search-results .item .title .owner img {
+	width: 25px;
+	height: auto;
+	vertical-align: middle;
+}
+
+#repo-selector .search-results .item .description  {
+	margin: 5px 0;
+	
+	font-family: sans-serif;
+	font-size: 1em;
 }
