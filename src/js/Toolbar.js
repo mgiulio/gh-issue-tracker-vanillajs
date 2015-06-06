@@ -2,7 +2,9 @@ export var api = {
 	init: init
 };
 
-import {api as ghAPI} from '../lib/gh-api.js';
+import {api as ghAPI} from './lib/gh-api.js';
+import {api as dom} from './lib/dom.js';
+import {api as issues} from './Issues.js';
 
 var
 	rootEl,
@@ -14,6 +16,7 @@ function init(cfg) {
 	searchResultsEl = rootEl.querySelector('.search-results');
 	
 	rootEl.addEventListener('submit', changeCurrentRepo, false); 
+	searchResultsEl.addEventListener('click', onSearchResultSelection);
 }
 
 function changeCurrentRepo(e) {
@@ -51,7 +54,7 @@ function changeCurrentRepo(e) {
 				itemsHTML = 'No items found';
 			
 			searchResultsEl.innerHTML = itemsHTML;
-			searchResultsEl.classList.add('visible');
+			showSearchResults();
 		})
 		.catch(function(err) {
 			console.log(err);
@@ -79,4 +82,28 @@ function parseRepoSearchTerm(s) {
 		user = parts[0];
 	
 	return [user, repo];
+}
+
+function onSearchResultSelection(e) {
+	e.stopPropagation();
+	e.preventDefault();
+	
+	var itemEl = dom.getTarget(e, '.item');
+	if (!itemEl)
+		return;
+	
+	var repoFullName = itemEl.innerHTML;
+	
+	issues.setRepo(repoFullName);
+	
+	hideSearchResults();
+}
+
+
+function showSearchResults() {
+	searchResultsEl.classList.add('visible');
+}
+
+function hideSearchResults() {
+	searchResultsEl.classList.remove('visible');
 }

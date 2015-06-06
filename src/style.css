@@ -48,7 +48,18 @@ body {
 	display: block;
 }
 #toolbar .search-results .item {
-	margin: 0;
+	margin: 5px;
+	padding: 10px;
+	
+	background: #aaa;
+	border-bottom: 1px solid #888;
+	color: #555;
+	
+	cursor: pointer;
+}
+#toolbar .search-results .item:hover {
+	background: #555;
+	color: #aaa;
 }
 
 #list .items {

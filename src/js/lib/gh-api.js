@@ -1,7 +1,8 @@
 export var api = {
 	search: {
 		repository: searchRepo
-	}
+	},
+	getRepoIssues: getRepoIssues
 	//getUserRepos: getUserRepos
 };
 
@@ -28,6 +29,28 @@ function searchRepo(keywords, qualifiers, sort, order) {
 		params.order = order;
 	
 	return makeRequest('/search/repositories', params);
+}
+
+function getRepoIssues(fullName, cfg) {
+	var params = {};
+
+	var filter = cfg.filter;
+	if (filter) {
+		var allowedFilters = {};
+		for (var f in filter)
+			if (f in allowedFilters)
+				params[f] = filter[f];
+	}
+	
+	var sort = cfg.sort;
+	if (sort) {
+		if (sort.type)
+			params['sort'] = sort.type;
+		if (sort.dir)
+			params['direction'] = sort.dir;
+	}
+	
+	return makeRequest(`/repos/${fullName}/issues`, params);
 }
 
 /* function getUserRepos(username, sort, done) {
