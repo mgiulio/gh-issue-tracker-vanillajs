@@ -1,0 +1,48 @@
+#repo-selector {
+	position: relative;
+	width: 300px;
+	margin: 0 auto;
+}
+
+#repo-selector input[type="text"] {
+	width: 75%;
+	text-align: center;
+}
+#repo-selector input[type="submit"] {
+	width: 20%;
+}
+
+#repo-selector .search-results {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	
+	position: absolute;
+	top: 100%;
+	width: 100%;
+	max-height: 90vh;
+	overflow: auto;
+	
+	background-color: #f6f6f6;
+	border: 1px solid #eee;
+	color: black;
+	
+	display: none;
+}
+#repo-selector .search-results.visible {
+	display: block;
+}
+#repo-selector .search-results .item {
+	margin: 5px;
+	padding: 10px;
+	
+	background: #aaa;
+	border-bottom: 1px solid #888;
+	color: #555;
+	
+	cursor: pointer;
+}
+#repo-selector .search-results .item:hover {
+	background: #555;
+	color: #aaa;
+}
