@@ -1,0 +1,19 @@
+{
+  "name": "gh-issue-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-traceur": "^0.5.4",
+    "traceur": "0.0.89"
+  }
+}
