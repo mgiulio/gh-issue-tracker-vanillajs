@@ -6,26 +6,35 @@ import {api as ghAPI} from './lib/gh-api.js';
 import {api as tmpl} from './templates.js';
 
 var
-	rootEl = document.querySelector('#list .items')
+	rootEl = document.querySelector('#list .items'),
+	pageIt
 ;
 
 function setRepo(fullName) {
-	ghAPI.getRepoIssues(fullName, { 
+	pageIt = ghAPI.getRepoIssues(fullName, { 
 		filter: {
 			state: 'all'
 		},
 		sort: {
 			/*field|by|criteria*/type: 'created',
 			dir: 'desc'
-		}//,			
-		//page: 1
-	})
-		.then(function(issues) {
-			appendItems(issues);
-		})
-		.catch(function(err) {
-			console.log(err);
-		})
+		}			
+	});
+	
+	getNextPage();
+}
+
+function getNextPage() {
+	pageIt.next()
+		.then(
+			function(items) { // items is empty if no next page
+				console.log(items);
+				appendItems(items);
+			},
+			function() {
+				console.log(arguments);
+			}
+		)
 	;
 }
 

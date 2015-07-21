@@ -28,7 +28,13 @@ function searchRepo(keywords, qualifiers, sort, order) {
 	if (order)
 		params.order = order;
 	
-	return makeRequest('/search/repositories', params);
+	return fetch(callUrl('/search/repositories', params))
+		.then(function(response) {
+			if (response.status != 200)
+				throw new Error('Status error code: ' + response.status );
+			return response.json();
+		})
+	;
 }
 
 function getRepoIssues(fullName, cfg) {
@@ -36,7 +42,7 @@ function getRepoIssues(fullName, cfg) {
 
 	var filter = cfg.filter;
 	if (filter) {
-		var allowedFilters = {};
+		var allowedFilters = {'state': 'open'};
 		for (var f in filter)
 			if (f in allowedFilters)
 				params[f] = filter[f];
@@ -50,36 +56,50 @@ function getRepoIssues(fullName, cfg) {
 			params['direction'] = sort.dir;
 	}
 	
-	return makeRequest(`/repos/${fullName}/issues`, params);
+	return new PageIterator(callUrl(`/repos/${fullName}/issues`, params));
 }
+
+function PageIterator(firstPageUrl) {
+	this.navUrls = {
+		first: firstPageUrl,
+		next: firstPageUrl,
+		prev: null,
+		last: null
+	};
+}
+
+PageIterator.prototype.next = function() {
+	var self = this;
+	
+	return new Promise(function(resolve, reject) {
+		if (!self.navUrls.next)
+			resolve([]);
+	
+		fetch(self.navUrls.next)
+			.then(function(response) {
+				if (response.status != 200)
+					reject(Error('Status error code: ' + response.status));
+				
+				self.updateNavUrls(response.headers.get('Link'));
+				
+				response.json().then(function(json) { resolve(json); });
+			})
+		;
+	});
+};
+
+PageIterator.prototype.updateNavUrls = function() {
+};
 
 /* function getUserRepos(username, sort, done) {
 	makeRequest('/users/' + username + '/repos', {'sort': sort}, done);
 } */
 
-function makeRequest(path, pars) {
-	return new Promise(function(resolve, reject) {
-		var queryString = [];
-		for (var p in pars)
-			queryString.push(p + '=' + pars[p]);
-		queryString = '?' + queryString.join('&');
+function callUrl(path, pars) {
+	var queryString = [];
+	for (var p in pars)
+		queryString.push(p + '=' + pars[p]);
+	queryString = '?' + queryString.join('&');
 
-		var url = apiUrl + path + queryString;
-		
-		return fetch(url)
-			.then(function(response) {
-				if (response.status != 200)
-					reject(Error('Status error code: ' + response.status ));
-				
-				response.json().then(function(json) {
-					resolve(json);
-				});
-				//console.log(response.text());
-				//resolve(JSON.parse(response.text()));
-			})
-			.catch(function(err) {
-				reject(err);
-			})
-		;
-	});
+	return apiUrl + path + queryString;
 }
